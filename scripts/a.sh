@@ -1820,13 +1820,13 @@ fi
         $PATHRPI"/muntjacsdr_dvb" -i $TSVIDEOFILE -s "$SYMBOLRATE_K"000 -f $FECNUM/$FECDEN -r $UPSAMPLE -m $MODTYPE -c $CONSTLN $PILOTS $FRAMES \
           -t "$FREQ_OUTPUT"e6 -g $MUNTJAC_GAINF -e $BAND_GPIO &
       ;;
-#        "PLUTO")
-#        rpidatv/bin/ffmpeg -thread_queue_size 2048 \
-#          -i $TSVIDEOFILE -c:v copy -c:a copy \
-#          -f flv \
-#          rtmp://$PLUTOIP:7272/,$FREQ_OUTPUT,$MODTYPE,$CONSTLN,$SYMBOLRATE_K,$PFEC,-$PLUTOPWR,nocalib,800,32,/$PLUTOCALL, &
-#        exit
-#      ;;
+      "PLUTO")
+        rpidatv/bin/ffmpeg -thread_queue_size 2048 \
+          -i $TSVIDEOFILE -c:v copy -c:a copy \
+          -f flv \
+          rtmp://$PLUTOIP:7272/,$FREQ_OUTPUT,$MODTYPE,$CONSTLN,$SYMBOLRATE_K,$PFEC,-$PLUTOPWR,nocalib,800,32,/$PLUTOCALL, &
+        exit
+      ;;
       *)
         sudo $PATHRPI"/rpidatv" -i $TSVIDEOFILE -s $SYMBOLRATE_K -c $FECNUM"/"$FECDEN -f $FREQUENCY_OUT -p $GAIN -m $MODE -l -x $PIN_I -y $PIN_Q &;;
     esac
