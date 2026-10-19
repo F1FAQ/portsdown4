@@ -81,7 +81,6 @@ echo "----- Installing Packages -----"
 echo "-------------------------------"
 
 sudo apt-get -y install git cmake libusb-1.0-0-dev libfftw3-dev libxcb-shape0 
-sudo apt-get -y install wiringpi                                         # Wiring pi depracated? 
 sudo apt-get -y install libx11-dev buffer libjpeg-dev indent 
 sudo apt-get -y install bc usbmount libvncserver-dev
 sudo apt-get -y install ttf-dejavu-core                                  # being depracated?
@@ -121,9 +120,16 @@ sudo apt-get -y install libhamlib-utils                                 # For IS
 pip3 install ephem requests                                             # For ISS tracker
 
 # Install WiringPi
-cd /home/pi
+cd ~
 git clone https://github.com/WiringPi/WiringPi.git
 cd WiringPi
+
+# Modify so that it installs on 32-bit buster
+cd wiringPi
+sed -i -e 's/\(\[\[gnu::packed\]\]\)//g' bcm_registers.h
+sed -i -e 's/\(\[\[gnu::packed\]\]\)//g' rp1_registers.h
+cd ~/WiringPi
+
 ./build debian
 
 # Read latest WiringPi version number and install it
@@ -420,6 +426,16 @@ sudo cp datvexpress16.ihx /lib/firmware/datvexpress/datvexpress16.ihx
 sudo cp datvexpressraw16.rbf /lib/firmware/datvexpress/datvexpressraw16.rbf
 cd /home/pi
 
+echo
+echo "-----------------------------------"
+echo "----- Installing dvb_t2_stack -----"
+echo "-----------------------------------"
+cd /home/pi/rpidatv/src/dvb_t2_stack
+make clean
+make -j $(nproc) PI4=1 dvb_t2_stack
+cp dvb_t2_stack /home/pi/rpidatv/bin/dvb_t2_stack
+cd /home/pi
+
 # Install LongMynd
 echo
 echo "--------------------------------------------"
@@ -539,8 +555,8 @@ echo "---------------------------------------"
 cd /home/pi/rpidatv/src/meteorview
 
 # Download api
-wget "https://sdrplay.com/download/hardware-api-linux-32bit-unsupported/?wpdmdl=2341&refresh=6a87239f68e1f1787241375" -O SDRplay_RSP_API-ARM-3.09.1.run
-# was wget https://www.sdrplay.com/software/SDRplay_RSP_API-ARM-3.09.1.run
+# was wget "https://sdrplay.com/download/hardware-api-linux-32bit-unsupported/?wpdmdl=2341&refresh=6a87239f68e1f1787241375" -O SDRplay_RSP_API-ARM-3.09.1.run
+wget https://www.sdrplay.com/software/SDRplay_RSP_API-ARM-3.09.1.run
 chmod +x SDRplay_RSP_API-ARM-3.09.1.run
 
 # Create file to trigger install on next reboot
